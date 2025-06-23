@@ -22,14 +22,13 @@ class SqlServerManager:
         sql_config = self.dbConfig[self.source]["sqlserver"]
 
         conn_str = (
-            f"DRIVER={{ODBC Driver 17 for SQL Server}};"
-            f"SERVER={sql_config['host']},{sql_config['port']};"
-            f"DATABASE={sql_config['database']};"
-            f"UID={sql_config['username']};"
-            f"PWD={sql_config['password']};"
-            f"TrustServerCertificate=yes;" 
-
-        )
+        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"SERVER={sql_config['host']};"
+        f"DATABASE={sql_config['database']};"
+        f"Trusted_Connection=yes;"
+        f"TrustServerCertificate=yes;"
+    )
+        
         try:
             self.activeConnection = pyodbc.connect(conn_str)
         except Exception as e:

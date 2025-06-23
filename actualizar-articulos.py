@@ -4,7 +4,7 @@ import time
 start_time = time.perf_counter()
 
 oArticulos = Articulos()
-oArticulos.recibir_rubros()
+oArticulos.insertFamilias()
 
 
 elapsed_time = time.perf_counter() - start_time
