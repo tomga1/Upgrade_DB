@@ -10,7 +10,7 @@ class Articulos:
         self._objSAP.login()
 
 
-    def insertFamilias(self):
+    def insert_familias(self):
         sap = SAPManager()
         oConfig = JSONManager()
         oConfig.file_name = "config.json"
@@ -24,8 +24,6 @@ class Articulos:
         if sqlserver.source == "sap":
             rubros = sap.getData("rubros", None)
 
-        sap.logout_if_source_is_sap(sqlserver)
-
         try:
             for rubro in rubros["value"]:
                 sql = f"EXEC sp_sap_familias_insert '{rubro['RubroName']}'"
@@ -38,6 +36,36 @@ class Articulos:
             print(f"Unexpected {err=}, {type(err)=}")
 
         sap.logout_if_source_is_sap(sqlserver)
+
+
+
+    def insert_sub_familias(self):
+        sap = SAPManager()
+        oConfig = JSONManager()
+        oConfig.file_name = "config.json"
+        oConfig.get_content()
+        sqlserver = SqlServerManager()
+
+        sap.login_if_source_is_sap(sqlserver)
+
+        procesados = 0 
+
+        if sqlserver.source == "sap":
+            subrubros = sap.getData("subrubros", None)
+
+        try:
+            for subrubro in subrubros["value"]:
+                sql = f"EXEC sp_sap_subfamilias_insert '{subrubro['SubRubroName']}'"
+                sqlserver.execute(sql)
+                procesados += 1
+                print(f"Sub_rubros procesados : {procesados}")
+            sqlserver.closeDB()
+            print(f"Sub_rubros Finalizado")
+        except BaseException as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+
+        sap.logout_if_source_is_sap(sqlserver)
+
 
 
 

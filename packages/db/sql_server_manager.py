@@ -1,5 +1,6 @@
 import traceback
 import pyodbc
+import re
 from packages.lfw_json.json_manager import JSONManager
 
 
@@ -46,10 +47,31 @@ class SqlServerManager:
         """
         cursor = self.activeConnection.cursor()
         try:
+
             if xargs is None:
                 cursor.execute(xsql)
             else:
                 cursor.execute(xsql, xargs)
+            self.activeConnection.commit()
+        except:
+            self.activeConnection.rollback()
+            traceback.print_exc()
+        finally:
+            cursor.close()
+
+    def execute_script(self, xsql):
+        """
+        Ejecuta un script SQL completo.
+        """
+        cursor = self.activeConnection.cursor()
+        try:
+            statements = re.split(r'^\s*GO\s*$', xsql, flags=re.IGNORECASE | re.MULTILINE)
+            
+            for stmt in statements:
+                stmt = stmt.strip()
+                if stmt:
+                    cursor.execute(stmt)
+
             self.activeConnection.commit()
         except:
             self.activeConnection.rollback()

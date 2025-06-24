@@ -3,8 +3,10 @@ import time
 
 start_time = time.perf_counter()
 
+
 oArticulos = Articulos()
-oArticulos.insertFamilias()
+oArticulos.insert_familias()
+oArticulos.insert_sub_familias()
 
 
 elapsed_time = time.perf_counter() - start_time
