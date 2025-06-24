@@ -64,6 +64,32 @@ class Articulos:
 
         sap.logout_if_source_is_sap(sqlserver)
 
+    def insert_marcas(self):
+        sap = SAPManager()
+        oConfig = JSONManager()
+        oConfig.file_name = "config.json"
+        oConfig.get_content()
+        sqlserver = SqlServerManager()
+
+        sap.login_if_source_is_sap(sqlserver)
+
+        procesados = 0 
+
+        if sqlserver.source == "sap":
+            marcas = sap.getData("marcas", None)
+
+        try:
+            for marca in marcas["value"]:
+                sql = f"EXEC sp_sap_marcas_insert '{marca['MarcaName']}'"
+                sqlserver.execute(sql)
+                procesados += 1
+                print(f"Marcas procesadas : {procesados}")
+            sqlserver.closeDB()
+            print(f"Marcas Finalizado")
+        except BaseException as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+
+        sap.logout_if_source_is_sap(sqlserver)
 
 
 

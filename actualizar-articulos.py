@@ -7,6 +7,7 @@ start_time = time.perf_counter()
 oArticulos = Articulos()
 oArticulos.insert_familias()
 oArticulos.insert_sub_familias()
+oArticulos.insert_marcas()
 
 
 elapsed_time = time.perf_counter() - start_time
