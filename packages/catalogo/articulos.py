@@ -37,8 +37,6 @@ class Articulos:
 
         sap.logout_if_source_is_sap(sqlserver)
 
-
-
     def insert_sub_familias(self):
         sap = SAPManager()
         oConfig = JSONManager()
