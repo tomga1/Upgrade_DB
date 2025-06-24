@@ -36,13 +36,13 @@ Este proyecto permite sincronizar datos desde SAP hacia una base de datos local 
 
 ## Uso
 
-### Sincronización principal:
+<!-- ### Sincronización principal: -->
 
-```bash
-# python main.py
+<!-- ```bash -->
+<!-- # python main.py
 
 
 ### Para aplicar cambios en la base de datos (crear o modificar procedimientos almacenados):
 # Este script debe ejecutarse desde la raíz del proyecto y permite mantener los procedimientos almacenados actualizados automáticamente a partir de archivos .sql.
 
-# python apply_sp.py
+# python apply_sp.py -->
