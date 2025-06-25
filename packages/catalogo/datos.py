@@ -2,11 +2,10 @@ from packages.sap.SAPManager import SAPManager
 from packages.lfw_json.json_manager import JSONManager
 from packages.db.sql_server_manager import SqlServerManager
 
-class Articulos: 
+class Datos: 
     def __init__(self):
         self._objSAP = SAPManager()
         self._aRubros = []
-
         self._objSAP.login()
 
 
@@ -37,7 +36,8 @@ class Articulos:
 
         sap.logout_if_source_is_sap(sqlserver)
 
-    def insert_sub_familias(self):
+
+    def update_datos(self, recurso, stored_procedure, build_sql_callback):
         sap = SAPManager()
         oConfig = JSONManager()
         oConfig.file_name = "config.json"
@@ -49,49 +49,20 @@ class Articulos:
         procesados = 0 
 
         if sqlserver.source == "sap":
-            subrubros = sap.getData("subrubros", None)
+            datos = sap.getData(recurso, None)
 
         try:
-            for subrubro in subrubros["value"]:
-                sql = f"EXEC sp_sap_subfamilias_insert '{subrubro['SubRubroName']}'"
+            for item in datos["value"]:
+                sql = build_sql_callback(item, stored_procedure)
                 sqlserver.execute(sql)
                 procesados += 1
-                print(f"Sub_rubros procesados : {procesados}")
+                print(f"{recurso.capitalize()} procesados: {procesados}")
             sqlserver.closeDB()
-            print(f"Sub_rubros Finalizado")
+            print(f"{recurso.capitalize()} Finalizado")
         except BaseException as err:
             print(f"Unexpected {err=}, {type(err)=}")
 
         sap.logout_if_source_is_sap(sqlserver)
-
-    def insert_marcas(self):
-        sap = SAPManager()
-        oConfig = JSONManager()
-        oConfig.file_name = "config.json"
-        oConfig.get_content()
-        sqlserver = SqlServerManager()
-
-        sap.login_if_source_is_sap(sqlserver)
-
-        procesados = 0 
-
-        if sqlserver.source == "sap":
-            marcas = sap.getData("marcas", None)
-
-        try:
-            for marca in marcas["value"]:
-                sql = f"EXEC sp_sap_marcas_insert '{marca['MarcaName']}'"
-                sqlserver.execute(sql)
-                procesados += 1
-                print(f"Marcas procesadas : {procesados}")
-            sqlserver.closeDB()
-            print(f"Marcas Finalizado")
-        except BaseException as err:
-            print(f"Unexpected {err=}, {type(err)=}")
-
-        sap.logout_if_source_is_sap(sqlserver)
-
-
 
 
 
