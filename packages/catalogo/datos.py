@@ -57,6 +57,7 @@ class Datos:
                 sqlserver.execute(sql)
                 procesados += 1
                 print(f"{recurso.capitalize()} procesados: {procesados}")
+                
             sqlserver.closeDB()
             print(f"{recurso.capitalize()} Finalizado")
         except BaseException as err:

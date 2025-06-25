@@ -22,6 +22,11 @@ oArticulos.update_datos(
     stored_procedure="sp_sap_marcas_insert",
     build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['MarcaName']}'"
 )
+oArticulos.update_datos(
+    recurso="art-cbios",
+    stored_procedure="sp_sap_art_cbios",
+    build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['ItemCode']}','{item['Price']}'"
+)
 
 
 
