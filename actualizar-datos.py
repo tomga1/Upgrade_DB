@@ -7,27 +7,28 @@ start_time = time.perf_counter()
 oDatos = Datos()
 
 
-oDatos.update_datos(
-    recurso="rubros",
-    stored_procedure="sp_sap_familias_insert",
-    build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['RubroName']}'"
-)
-oDatos.update_datos(
-    recurso="subrubros",
-    stored_procedure="sp_sap_subfamilias_insert",
-    build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['SubRubroName']}'"
-)
-oDatos.update_datos(
-    recurso="marcas",
-    stored_procedure="sp_sap_marcas_insert",
-    build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['MarcaName']}'"
-)
-oDatos.update_datos(
-    recurso="art-cbios",
-    stored_procedure="sp_sap_art_cbios",
-    build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['ItemCode']}','{item['Price']}'"
-)
+# oDatos.update_datos(
+#     recurso="rubros",
+#     stored_procedure="sp_sap_familias_insert",
+#     build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['RubroName']}'"
+# )
+# oDatos.update_datos(
+#     recurso="subrubros",
+#     stored_procedure="sp_sap_subfamilias_insert",
+#     build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['SubRubroName']}'"
+# )
+# oDatos.update_datos(
+#     recurso="marcas",
+#     stored_procedure="sp_sap_marcas_insert",
+#     build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['MarcaName']}'"
+# )
+# oDatos.update_datos(
+#     recurso="art-cbios",
+#     stored_procedure="sp_sap_art_cbios",
+#     build_sql_callback=lambda item, sp: f"EXEC {sp} '{item['ItemCode']}','{item['Price']}'"
+# )
 
+oDatos.insert_proveedor_if_exist()
 
 
 
