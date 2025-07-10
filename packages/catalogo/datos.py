@@ -10,7 +10,6 @@ class Datos:
 
 
 
-
     def update_datos(self, recurso, stored_procedure, build_sql_callback):
         sap = SAPManager()
         oConfig = JSONManager()
@@ -78,7 +77,6 @@ class Datos:
 
 
 
-
     def insert_unimed_if_exist(self):
         sqlserver = SqlServerManager()
         
@@ -104,7 +102,6 @@ class Datos:
                 print(f"[INFO] Unidad de medida '{codUM}' insertada con ID {proximo_id}.")
             else:
                 print(f"[OK] Unidad de medida '{codUM}' ya existe.")
-
 
 
 
