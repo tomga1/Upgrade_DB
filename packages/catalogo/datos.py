@@ -9,7 +9,7 @@ class Datos:
         self._objSAP.login()
 
 
-
+    # Atualiza : Rubros, Subrubros y Marcas
     def update_datos(self, recurso, stored_procedure, build_sql_callback):
         sap = SAPManager()
         oConfig = JSONManager()
@@ -39,6 +39,7 @@ class Datos:
         sap.logout_if_source_is_sap(sqlserver)
 
 
+    
     def insert_proveedor_if_exist(self, raz_soc, cuit=None):
         oConfig = JSONManager()
         oConfig.file_name = "config.json"
