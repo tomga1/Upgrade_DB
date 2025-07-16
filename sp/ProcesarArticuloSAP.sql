@@ -1,10 +1,11 @@
 CREATE OR ALTER PROCEDURE dbo.ProcesarArticuloSAP
     @ItemCode NVARCHAR(50),
     @ItemName NVARCHAR(200),
+    @tMon NVARCHAR(3) = 'PSO',
     @RubroCod NVARCHAR(50),
     @SubRubroCod NVARCHAR(50),
     @MarcaCod NVARCHAR(50),
-    @IvaRate DECIMAL(5,2),
+    @IvaRate FLOAT,
     @Habilitado CHAR(1),
     @CreateDate DATE,
     @UpdateDate DATE
@@ -19,10 +20,11 @@ BEGIN
     CREATE TABLE #tmpArticulos (
         ItemCode NVARCHAR(50),
         ItemName NVARCHAR(200),
+        tMon NVARCHAR(3) DEFAULT 'PSO',
         RubroCod NVARCHAR(50),
         SubRubroCod NVARCHAR(50),
         MarcaCod NVARCHAR(50),
-        IvaRate DECIMAL(5,2),
+        IvaRate FLOAT,
         Habilitado CHAR(1),
         CreateDate DATE,
         UpdateDate DATE
@@ -30,11 +32,11 @@ BEGIN
 
     -- Insertar datos en tabla temporal
     INSERT INTO #tmpArticulos (
-        ItemCode, ItemName, RubroCod, SubRubroCod, MarcaCod,
+        ItemCode, ItemName, tMon, RubroCod, SubRubroCod, MarcaCod,
         IvaRate, Habilitado, CreateDate, UpdateDate
     )
     VALUES (
-        @ItemCode, @ItemName, @RubroCod, @SubRubroCod, @MarcaCod,
+        @ItemCode, @ItemName, @tMon, @RubroCod, @SubRubroCod, @MarcaCod,
         @IvaRate, @Habilitado, @CreateDate, @UpdateDate
     );
 
@@ -69,13 +71,17 @@ BEGIN
     END
     ELSE
     BEGIN
+
+        DECLARE @nextId INT = ISNULL((SELECT MAX(idArticulo) + 1 FROM dbo.Articulos), 1);
+
         INSERT INTO dbo.Articulos
         (
-            codArt, descripcio, idFamilia, idSubFam, idMarca, alicIVA,
+            idArticulo, codArt, descripcio, tMon, idFamilia, idSubFam, idMarca, alicIVA,
             habilitado, idProv, fecAlta, fecModi
         )
-        SELECT 
-            ItemCode, ItemName, TRY_CAST(RubroCod AS INT), TRY_CAST(SubRubroCod AS INT), TRY_CAST(MarcaCod AS INT), IvaRate,
+        SELECT
+            @nextId, 
+            ItemCode, ItemName, tMon, TRY_CAST(RubroCod AS INT), TRY_CAST(SubRubroCod AS INT), TRY_CAST(MarcaCod AS INT), IvaRate,
             @habilitadoBit, @idProv, CreateDate, UpdateDate
         FROM #tmpArticulos;
     END
