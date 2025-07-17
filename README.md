@@ -19,7 +19,7 @@ Este proyecto permite sincronizar datos desde SAP hacia una base de datos local 
 
 - `SAPManager`: Maneja login, logout y consumo de endpoints de SAP.
 - `SqlServerManager`: Administra la conexión y operaciones sobre SQL Server.
-- `Articulos`: Clase de ejemplo que muestra cómo consultar y procesar datos de SAP (por ejemplo, rubros).
+- `Datos`: Clase de ejemplo que muestra cómo consultar y procesar datos de SAP (por ejemplo, rubros).
 - `config.json`: Archivo de configuración con las credenciales y endpoints.
 - `apply_sp.py`: Script para aplicar procedimientos almacenados de forma automática desde archivos `.sql`.
 
@@ -30,7 +30,7 @@ Este proyecto permite sincronizar datos desde SAP hacia una base de datos local 
 - Python 3.8+
 - `pyodbc`
 - `requests`
-- Driver ODBC para SQL Server (ej.: ODBC Driver 17 for SQL Server)
+- Driver ODBC para SQL Server (ej.: ODBC Driver 17 for SQL Server, se instala con SQL Server)
 
 ---
 

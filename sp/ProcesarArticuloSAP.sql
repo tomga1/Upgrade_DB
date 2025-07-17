@@ -13,25 +13,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Crear tabla temporal (si no existe)
-    IF OBJECT_ID('tempdb..#tmpArticulos') IS NOT NULL
-        DROP TABLE #tmpArticulos;
-
-    CREATE TABLE #tmpArticulos (
-        ItemCode NVARCHAR(50),
-        ItemName NVARCHAR(200),
-        tMon NVARCHAR(3) DEFAULT 'PSO',
-        RubroCod NVARCHAR(50),
-        SubRubroCod NVARCHAR(50),
-        MarcaCod NVARCHAR(50),
-        IvaRate FLOAT,
-        Habilitado CHAR(1),
-        CreateDate DATE,
-        UpdateDate DATE
-    );
+    -- Me aseguro que la tabla esté vacía antes de procesar.
+    TRUNCATE TABLE tmpArticulos;
 
     -- Insertar datos en tabla temporal
-    INSERT INTO #tmpArticulos (
+    INSERT INTO tmpArticulos (
         ItemCode, ItemName, tMon, RubroCod, SubRubroCod, MarcaCod,
         IvaRate, Habilitado, CreateDate, UpdateDate
     )
@@ -51,7 +37,7 @@ BEGIN
     FROM dbo.Articulos
     WHERE codArt = (
         SELECT TOP 1 ItemCode COLLATE SQL_Latin1_General_CP1_CI_AS
-        FROM #tmpArticulos
+        FROM tmpArticulos
     );
 
 
@@ -59,14 +45,14 @@ BEGIN
     BEGIN
         UPDATE dbo.Articulos
         SET 
-            descripcio = (SELECT TOP 1 ItemName FROM #tmpArticulos),
-            idFamilia = TRY_CAST((SELECT TOP 1 RubroCod FROM #tmpArticulos) AS INT),
-            idSubFam = TRY_CAST((SELECT TOP 1 SubRubroCod FROM #tmpArticulos) AS INT),
-            idMarca = TRY_CAST((SELECT TOP 1 MarcaCod FROM #tmpArticulos) AS INT),
-            alicIVA = (SELECT TOP 1 IvaRate FROM #tmpArticulos),
+            descripcio = (SELECT TOP 1 ItemName FROM tmpArticulos),
+            idFamilia = TRY_CAST((SELECT TOP 1 RubroCod FROM tmpArticulos) AS INT),
+            idSubFam = TRY_CAST((SELECT TOP 1 SubRubroCod FROM tmpArticulos) AS INT),
+            idMarca = TRY_CAST((SELECT TOP 1 MarcaCod FROM tmpArticulos) AS INT),
+            alicIVA = (SELECT TOP 1 IvaRate FROM tmpArticulos),
             habilitado = @habilitadoBit,
             idProv = @idProv,
-            fecModi = (SELECT TOP 1 UpdateDate FROM #tmpArticulos)
+            fecModi = (SELECT TOP 1 UpdateDate FROM tmpArticulos)
         WHERE idArticulo = @idArticulo;
     END
     ELSE
@@ -83,7 +69,6 @@ BEGIN
             @nextId, 
             ItemCode, ItemName, tMon, TRY_CAST(RubroCod AS INT), TRY_CAST(SubRubroCod AS INT), TRY_CAST(MarcaCod AS INT), IvaRate,
             @habilitadoBit, @idProv, CreateDate, UpdateDate
-        FROM #tmpArticulos;
+        FROM tmpArticulos;
     END
-    SELECT * from #tmpArticulos ; 
 END
